@@ -9,6 +9,7 @@ import org.springframework.transaction.annotation.Transactional;
 import com.example.demopostgresql.entity.CampaignSkuDetail;
 import com.example.demopostgresql.repository.CampaignSkuDetailRepository;
 import com.example.demopostgresql.services.CampaignService;
+import lombok.SneakyThrows;
 
 /**
  * @author rishi - created on 30/08/20
@@ -42,5 +43,29 @@ public class CampaignServiceImpl implements CampaignService {
 
   private void updateCampaign(int quota, String campaignCode) {
     campaignSkuDetailRepository.updateQuota(quota, campaignCode);
+  }
+
+  @Transactional
+  @SneakyThrows
+  public void deleteByCampaignCode(String campaignCode) {
+    CampaignSkuDetail campaignSkuDetail = campaignSkuDetailRepository.findByCampaignCode(campaignCode);
+    System.out.println(campaignSkuDetail);
+    campaignSkuDetailRepository.updateMerchantCode("911-000033", campaignCode);
+    CampaignSkuDetail campaignSkuDetail2 = campaignSkuDetailRepository.findByCampaignCode(campaignCode);
+    if (campaignSkuDetail2 == null) {
+      System.out.println("Its null");
+    } else {
+      System.out.println(campaignSkuDetail2);
+    }
+  }
+
+  @Override
+  @Transactional
+  public void clearAutomaticallyTest(CampaignSkuDetail campaignSkuDetail) {
+    String campaignCode = campaignSkuDetail.getCampaignCode();
+    campaignSkuDetailRepository.save(campaignSkuDetail);
+    campaignSkuDetailRepository.updateMerchantCode("ABCDEF-00001", campaignCode);
+    CampaignSkuDetail campaignSkuDetail1 = campaignSkuDetailRepository.findByCampaignCode(campaignCode);
+    System.out.println(campaignSkuDetail1);
   }
 }

@@ -14,4 +14,8 @@ public interface CampaignService {
   List<CampaignSkuDetail> getCampaignSkuDetailByCampaignCode(String campaignCode, String categoryCode);
 
   void transactionAnnotationExample(int quota, String campaignCode) throws Exception;
+
+  void deleteByCampaignCode(String campaignCode);
+
+  void clearAutomaticallyTest(CampaignSkuDetail campaignSkuDetail);
 }

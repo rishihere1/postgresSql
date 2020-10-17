@@ -22,4 +22,11 @@ public interface CampaignSkuDetailRepository extends JpaRepository<CampaignSkuDe
   void updateQuota(int i, String campaignCode);
 
   CampaignSkuDetail findByCampaignCode(String campaignCode);
+
+  @Modifying(clearAutomatically = false)
+  void deleteByCampaignCode(String campaignCode);
+
+  @Modifying
+  @Query("update CampaignSkuDetail c set c.merchantCode = ?1 where campaignCode = ?2")
+  void updateMerchantCode(String merchantCode, String campaignCode);
 }

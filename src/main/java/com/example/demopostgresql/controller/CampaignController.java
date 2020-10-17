@@ -5,8 +5,10 @@ import java.util.List;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -52,4 +54,18 @@ public class CampaignController {
     return "Database Updated";
   }
 
+  @PutMapping("/delete/{campaignCode}")
+  public String deleteByCampaignCode(@PathVariable String campaignCode) {
+    campaignService.deleteByCampaignCode(campaignCode);
+    return "DONE";
+  }
+
+
+  @RequestMapping(method = RequestMethod.POST, value = "/clearAutomaticallyTest")
+  public CampaignSkuDetailDTO clearAutomaticallyTest(@RequestBody CampaignSkuDetailDTO campaignSkuDetailDTO) {
+    CampaignSkuDetail campaignSkuDetail = new CampaignSkuDetail();
+    BeanUtils.copyProperties(campaignSkuDetailDTO, campaignSkuDetail);
+    campaignService.clearAutomaticallyTest(campaignSkuDetail);
+    return campaignSkuDetailDTO;
+  }
 }
