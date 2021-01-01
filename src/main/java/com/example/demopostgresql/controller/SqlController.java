@@ -29,6 +29,6 @@ public class SqlController {
   @GetMapping("/sqlJoinQuery")
   public String getJoinQueryData() {
     sqlService.getJoinQueryData();
-    return "Query ran successfully!";
+    return "Query ran successfully!!";
   }
 }
