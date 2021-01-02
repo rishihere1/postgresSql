@@ -9,7 +9,6 @@ import java.util.UUID;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 import com.example.demopostgresql.dto.OrderDetailsDto;
 import com.example.demopostgresql.dto.OrderDto;
@@ -90,7 +89,6 @@ public class SqlServiceImpl implements SqlService {
     return orderDetailsDtos;
   }
 
-  @Transactional
   public void orderProduct(Customers customer, Products product, OrderDto orderDto) {
     Employees employees = employeesRepository.getEmployeeWithLeastTask().get(0);
     Shippers shippers = shippersRepository.getShipper(orderDto.getSpeedPriority());
