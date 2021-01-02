@@ -1,13 +1,16 @@
 package com.example.demopostgresql.services;
 
-import com.example.demopostgresql.dto.SqlDto;
+import java.util.List;
+
+import com.example.demopostgresql.dto.OrderDetailsDto;
+import com.example.demopostgresql.dto.OrderDto;
 
 /**
  * @author rishi - created on 01/01/21
  **/
 public interface SqlService {
 
-  void addData(SqlDto sqlDto);
+  void order(OrderDto orderDto);
 
-  void getJoinQueryData();
+  List<OrderDetailsDto> getOrderDetails(String customerId);
 }

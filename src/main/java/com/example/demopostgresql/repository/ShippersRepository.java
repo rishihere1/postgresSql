@@ -17,4 +17,7 @@ public interface ShippersRepository extends JpaRepository<Shippers, String> {
 
   @Query("SELECT o from Shippers o where o.id = :id")
   List<Shippers> findOut(@Param("id") String id);
+
+  @Query("select s from Shippers s where s.priority = ?1")
+  Shippers getShipper(int speedPriority);
 }

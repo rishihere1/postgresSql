@@ -16,5 +16,5 @@ import com.example.demopostgresql.entity.Orders;
 public interface OrdersRepository extends JpaRepository<Orders, String> {
 
   @Query("SELECT o from Orders o where o.id = :id")
-  List<Orders> findOut(@Param("id") String id);
+  List<Object> findOut(@Param("id") String id);
 }

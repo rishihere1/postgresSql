@@ -1,11 +1,18 @@
 package com.example.demopostgresql.services.impl;
 
+import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
+import java.util.Set;
+import java.util.UUID;
 
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
-import com.example.demopostgresql.dto.SqlDto;
+import com.example.demopostgresql.dto.OrderDetailsDto;
+import com.example.demopostgresql.dto.OrderDto;
 import com.example.demopostgresql.entity.Customers;
 import com.example.demopostgresql.entity.Employees;
 import com.example.demopostgresql.entity.OrderDetails;
@@ -19,7 +26,6 @@ import com.example.demopostgresql.repository.OrdersRepository;
 import com.example.demopostgresql.repository.ProductsRepository;
 import com.example.demopostgresql.repository.ShippersRepository;
 import com.example.demopostgresql.services.SqlService;
-import com.example.demopostgresql.util.SqlUtils;
 
 /**
  * @author rishi - created on 01/01/21
@@ -46,29 +52,59 @@ public class SqlServiceImpl implements SqlService {
   private ShippersRepository shippersRepository;
 
   @Override
-  public void addData(SqlDto sqlDto) {
-    Customers customers = customersRepository.save(SqlUtils.setCustomers(sqlDto));
-    Employees employee = employeesRepository.save(SqlUtils.setEmployees(sqlDto));
-    Shippers shippers = shippersRepository.save(SqlUtils.setShippers(sqlDto));
-    Orders orders = SqlUtils.setOrders(sqlDto);
-    orders.setCustomers(customers);
-    orders.setEmployees(employee);
-    orders.setShippers(shippers);
-    Orders savedOrders = ordersRepository.save(orders);
-    Products products = SqlUtils.setProducts(sqlDto);
-    products.setOrders(savedOrders);
-    Products savedProducts = productsRepository.save(products);
-    OrderDetails orderDetails = SqlUtils.setOrderDetails(sqlDto);
-    orderDetails.setOrders(savedOrders);
-    orderDetails.setProducts(savedProducts);
-    orderDetailsRepository.save(orderDetails);
+  public void order(OrderDto orderDto) {
+    Customers customer = customersRepository.findCustomer(orderDto.getCustomerName());
+    if (customer == null) {
+      System.out.println("Customer name " + orderDto.getCustomerName() + "does not exist");
+      throw new RuntimeException();
+    }
+    Products product = productsRepository.findProduct(orderDto.getProductId());
+    if (product == null) {
+      System.out.println("Product with id " + orderDto.getProductId() + "does not exist");
+      throw new RuntimeException();
+    }
+    orderProduct(customer, product, orderDto);
   }
 
   @Override
-  public void getJoinQueryData() {
-    List<Customers> value = customersRepository.findOut("7d55c316-c911-4a79-8ab5-80329ef7b077");
-    System.out.println(value.get(0).getCustomerName());
-    System.out.println(value.get(0).getAddress());
-    System.out.println(value.get(0).getOrders());
+  public List<OrderDetailsDto> getOrderDetails(String customerId) {
+    Customers customer = customersRepository.findOut(customerId);
+    Set<Orders> ordersSet = customer.getOrders();
+    List<OrderDetailsDto> orderDetailsDtos = new ArrayList<>();
+    for (Orders orders : ordersSet) {
+      OrderDetailsDto orderDetailsDto = new OrderDetailsDto();
+      BeanUtils.copyProperties(customer, orderDetailsDto);
+      BeanUtils.copyProperties(orders, orderDetailsDto);
+      Employees employees = orders.getEmployees();
+      BeanUtils.copyProperties(employees, orderDetailsDto);
+      Shippers shippers = orders.getShippers();
+      BeanUtils.copyProperties(shippers, orderDetailsDto);
+      Set<OrderDetails> orderDetailsSet = orders.getOrderDetails();
+      for (OrderDetails orderDetails : orderDetailsSet) {
+        BeanUtils.copyProperties(orderDetails, orderDetailsDto);
+        Products products = orderDetails.getProducts();
+        BeanUtils.copyProperties(products, orderDetailsDto);
+      }
+      orderDetailsDtos.add(orderDetailsDto);
+    }
+    return orderDetailsDtos;
+  }
+
+  @Transactional
+  public void orderProduct(Customers customer, Products product, OrderDto orderDto) {
+    Employees employees = employeesRepository.getEmployeeWithLeastTask().get(0);
+    Shippers shippers = shippersRepository.getShipper(orderDto.getSpeedPriority());
+    if (shippers == null) {
+      System.out.println("Shipper with priority " + orderDto.getSpeedPriority() + "does not exist");
+      throw new RuntimeException();
+    }
+    Orders orders = Orders.builder().orderDate(new Date()).customers(customer).employees(employees).shippers(shippers)
+        .id(UUID.randomUUID().toString()).build();
+    Orders savedOrders = ordersRepository.save(orders);
+    OrderDetails orderDetails =
+        OrderDetails.builder().quantity(orderDto.getQuantity()).orders(savedOrders).products(product).build();
+    orderDetailsRepository.save(orderDetails);
+    employees.setTask(employees.getTask() + 1);
+    employeesRepository.save(employees);
   }
 }

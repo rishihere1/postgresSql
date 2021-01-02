@@ -50,6 +50,9 @@ public class Employees implements Serializable {
   @Column(name = "notes")
   private String notes;
 
+  @Column(name = "task")
+  private int task;
+
   @Override
   public String toString() {
     return id;

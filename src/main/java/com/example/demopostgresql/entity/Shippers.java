@@ -41,6 +41,9 @@ public class Shippers implements Serializable {
   @Column(name = "shipper_phone_number")
   private String phoneNumber;
 
+  @Column(name = "priority")
+  private int priority;
+
   @Override
   public String toString() {
     return id;

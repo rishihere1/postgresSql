@@ -84,5 +84,16 @@ public class SqlUtils {
    "shipperName" : "Federal Shipping",
    "shipperPhoneNumber" : "(503) 555-9931"
    }
+
+
+
+    Order api request body
+
+   {
+   "customerName" : "Princesa Isabel Vinhoss",
+   "productId" : "10",
+   "speedPriority" : 1,
+   "quantity" : 2
+   }
    */
 }

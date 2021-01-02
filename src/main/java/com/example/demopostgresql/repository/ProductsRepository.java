@@ -1,6 +1,7 @@
 package com.example.demopostgresql.repository;
 
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
 import com.example.demopostgresql.entity.Products;
@@ -11,4 +12,6 @@ import com.example.demopostgresql.entity.Products;
 @Repository
 public interface ProductsRepository extends JpaRepository<Products, String> {
 
+  @Query("select p from Products p where p.id = ?1")
+  Products findProduct(String productId);
 }

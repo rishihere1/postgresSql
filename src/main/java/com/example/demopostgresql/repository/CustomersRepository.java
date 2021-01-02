@@ -1,7 +1,5 @@
 package com.example.demopostgresql.repository;
 
-import java.util.List;
-
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -16,5 +14,8 @@ import com.example.demopostgresql.entity.Customers;
 public interface CustomersRepository extends JpaRepository<Customers, String> {
 
   @Query("SELECT o from Customers o where o.id = :id")
-  List<Customers> findOut(@Param("id") String id);
+  Customers findOut(@Param("id") String id);
+
+  @Query("select c from Customers c where c.customerName = ?1")
+  Customers findCustomer(String customerName);
 }
