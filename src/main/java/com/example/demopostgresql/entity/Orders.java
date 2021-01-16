@@ -58,7 +58,7 @@ public class Orders implements Serializable {
   private Shippers shippers;
 
   @JsonBackReference
-  @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.PERSIST)
+  @ManyToOne(fetch = FetchType.LAZY)
   @JoinColumn(name = "customers_fk")
   private Customers customers;
 
