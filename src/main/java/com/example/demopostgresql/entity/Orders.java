@@ -65,8 +65,7 @@ public class Orders implements Serializable {
   @JsonManagedReference
   @OneToMany(mappedBy = "orders",
              fetch = FetchType.LAZY,
-             cascade = CascadeType.REMOVE,
-             orphanRemoval = true)
+             cascade = CascadeType.REMOVE)
   private Set<OrderDetails> orderDetails = new HashSet<>();
 
   @Override
