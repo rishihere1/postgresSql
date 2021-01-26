@@ -150,5 +150,10 @@ public class SqlUtils {
    insert into products VALUES ('8'	,'Alice Mutton'	,'20 - 1 kg tins',39);
    insert into products VALUES ('9'	,'Uncle Bobs Organic Dried Pears'	,'12 - 1 lb pkgs.',80.5);
    insert into products VALUES ('10'	,'Aniseed Syrup'	,'12 - 550 ml bottles',10.5);
+
+
+
+   Entity manager tutorial
+   http://meri-stuff.blogspot.com/2012/03/jpa-tutorial.html#End
    */
 }
