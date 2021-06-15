@@ -6,14 +6,21 @@ import java.util.List;
 import java.util.Set;
 import java.util.UUID;
 
+import javax.persistence.EntityManagerFactory;
+
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Bean;
+import org.springframework.orm.jpa.vendor.HibernateJpaSessionFactoryBean;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.example.demopostgresql.dto.CampaignCriteriaBuilder;
+import com.example.demopostgresql.dto.CampaignFilterRequest;
 import com.example.demopostgresql.dto.OrderDetailsDto;
 import com.example.demopostgresql.dto.OrderDto;
 import com.example.demopostgresql.dto.ProductResponseDto;
+import com.example.demopostgresql.entity.Campaign;
 import com.example.demopostgresql.entity.Category;
 import com.example.demopostgresql.entity.Customers;
 import com.example.demopostgresql.entity.Employees;
@@ -21,6 +28,7 @@ import com.example.demopostgresql.entity.OrderDetails;
 import com.example.demopostgresql.entity.Orders;
 import com.example.demopostgresql.entity.Products;
 import com.example.demopostgresql.entity.Shippers;
+import com.example.demopostgresql.repository.CampaignRepository;
 import com.example.demopostgresql.repository.CategoryRepository;
 import com.example.demopostgresql.repository.CustomersRepository;
 import com.example.demopostgresql.repository.EmployeesRepository;
@@ -56,6 +64,12 @@ public class SqlServiceImpl implements SqlService {
 
   @Autowired
   private CategoryRepository categoryRepository;
+
+  @Autowired
+  private CampaignRepository campaignRepository;
+
+  @Autowired
+  private CampaignCriteriaBuilder campaignCriteriaBuilder;
 
   @Override
   public void order(OrderDto orderDto) {
@@ -146,4 +160,13 @@ public class SqlServiceImpl implements SqlService {
       System.out.println(each.getDesignation());
     }
   }
+
+  @Override
+  public void filter() {
+    campaignCriteriaBuilder
+        .setCampaignFilterRequest(CampaignFilterRequest.builder().merchantCode("TOQ-00005").sellerRating(2).build());
+    List<Campaign> campaigns = campaignRepository.findAll(campaignCriteriaBuilder);
+    campaigns.forEach(campaign -> System.out.println(campaign.getCampaignCode()));
+  }
+
 }

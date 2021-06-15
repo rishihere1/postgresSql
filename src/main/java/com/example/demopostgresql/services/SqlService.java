@@ -17,4 +17,6 @@ public interface SqlService {
   void cancelOrder(String orderId);
 
   void getCategories(String value);
+
+  void filter();
 }

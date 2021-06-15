@@ -47,4 +47,9 @@ public class SqlController {
     sqlService.getCategories(value);
     return "Done";
   }
+
+  @GetMapping("/filter")
+  public void filter() {
+    sqlService.filter();
+  }
 }

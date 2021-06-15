@@ -156,4 +156,11 @@ public class SqlUtils {
    Entity manager tutorial
    http://meri-stuff.blogspot.com/2012/03/jpa-tutorial.html#End
    */
+
+
+  /**
+   *
+   *
+   SELECT COUNT(cd.status) over (PARTITION by cd.status) as status_count, cd.id, cd.created_by, cd.created_date, cd.store_id, cd.updated_by ,cd.updated_date, cd.campaign_code, cd.promo_display_name, cd.promo_unique_name, cd.status, cd.reg_start_time, cd.reg_end_time, cd.promo_start_time, cd.promo_end_time, cd.terms_and_cond, cd.promo_banner_url, cd.promo_display_desc, cd.tag_label, cd.exclusive, cd.min_final_price, cd.campaign_type from camp_detail as cd left join camp_rule_set crs on cd.id = crs.campaign_fk left join camp_merchant_detail cmd on cmd.campaign_code = cd.campaign_code left join camp_rule_entity_codes crec on crs.id = crec.campaign_rule_fk where cd.campaign_type in (:campaignTypes) and cd.status in (:campaignStatuses) and crs.rule_type = 'MERCHANT' and case when cd.perfect_transaction is null then (crs.is_ignored = true or crec.entity_code = :entityCode) else ((:sellerRating >= cd.seller_rating and  :onTimeFulfillment >= cd.on_time_fulfillment and :perfectTransaction >= cd.perfect_transaction) or (cmd.merchant_code = :entityCode)) end order by campaign_priority(cd.status, cd.reg_end_time, cd.promo_end_time) --#pageable;
+   */
 }
